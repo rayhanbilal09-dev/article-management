@@ -14,44 +14,53 @@ class ArticleController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $search = $request->search;
+    {
+        $search = $request->search;
 
-    $articles = Article::with('user')
-        ->when($search, function ($query) use ($search) {
+        $query = Article::with('user');
 
+        // If user is not superadmin, show only their own articles
+        if (!auth()->user()->isSuperAdmin()) {
+            $query->where('user_id', auth()->id());
+        }
+
+        $articles = $query->when($search, function ($query) use ($search) {
             $query->where('title', 'like', "%{$search}%");
+        })->paginate(10);
 
-        })
-        ->paginate(10);
-
-    return view('articles.index', compact('articles'));
-}
+        return view('articles.index', compact('articles'));
+    }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-{
-    $users = User::all();
+    {
+        $users = auth()->user()->isSuperAdmin() ? User::all() : null;
 
-    return view('articles.create', compact('users'));
-}
+        return view('articles.create', compact('users'));
+    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required',
+        $rules = [
             'title' => 'required',
             'content' => 'required',
             'status' => 'required|in:draft,published',
-        ]);
+        ];
+
+        // Only superadmin can select user_id
+        if (auth()->user()->isSuperAdmin()) {
+            $rules['user_id'] = 'required|exists:users,id';
+        }
+
+        $request->validate($rules);
 
         Article::create([
-            'user_id' => $request->user_id,
+            'user_id' => auth()->user()->isSuperAdmin() ? $request->user_id : auth()->id(),
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'content' => $request->content,
@@ -59,7 +68,7 @@ class ArticleController extends Controller
             'published_at' => $request->status === 'published' ? now() : null,
         ]);
 
-        return redirect()->route('articles.index');
+        return redirect()->route('articles.index')->with('success', 'Artikel berhasil dibuat.');
     }
 
     /**
@@ -68,6 +77,9 @@ class ArticleController extends Controller
     public function show(string $id)
     {
         $article = Article::with('user')->findOrFail($id);
+
+        // Check authorization
+        $this->authorizeArticle($article);
 
         return view('articles.show', compact('article'));
     }
@@ -78,7 +90,11 @@ class ArticleController extends Controller
     public function edit(string $id)
     {
         $article = Article::findOrFail($id);
-        $users = User::all();
+
+        // Check authorization
+        $this->authorizeArticle($article);
+
+        $users = auth()->user()->isSuperAdmin() ? User::all() : null;
 
         return view('articles.edit', compact('article', 'users'));
     }
@@ -90,15 +106,24 @@ class ArticleController extends Controller
     {
         $article = Article::findOrFail($id);
 
-        $request->validate([
-            'user_id' => 'required',
+        // Check authorization
+        $this->authorizeArticle($article);
+
+        $rules = [
             'title' => 'required',
             'content' => 'required',
             'status' => 'required|in:draft,published',
-        ]);
+        ];
+
+        // Only superadmin can change user_id
+        if (auth()->user()->isSuperAdmin()) {
+            $rules['user_id'] = 'required|exists:users,id';
+        }
+
+        $request->validate($rules);
 
         $article->update([
-            'user_id' => $request->user_id,
+            'user_id' => auth()->user()->isSuperAdmin() ? $request->user_id : $article->user_id,
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'content' => $request->content,
@@ -108,7 +133,7 @@ class ArticleController extends Controller
                 : null,
         ]);
 
-        return redirect()->route('articles.index');
+        return redirect()->route('articles.index')->with('success', 'Artikel berhasil diperbarui.');
     }
 
     /**
@@ -117,8 +142,22 @@ class ArticleController extends Controller
     public function destroy(string $id)
     {
         $article = Article::findOrFail($id);
+
+        // Check authorization
+        $this->authorizeArticle($article);
+
         $article->delete();
 
-        return redirect()->route('articles.index');
+        return redirect()->route('articles.index')->with('success', 'Artikel berhasil dihapus.');
+    }
+
+    /**
+     * Authorize article access
+     */
+    private function authorizeArticle(Article $article): void
+    {
+        if (!auth()->user()->isSuperAdmin() && $article->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses untuk mengakses artikel ini.');
+        }
     }
 }

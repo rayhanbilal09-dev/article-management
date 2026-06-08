@@ -24,31 +24,34 @@
 
             <!-- Grid: Author and Status -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Author Select -->
-                <div class="space-y-2">
-                    <label for="user_id" class="block text-sm font-bold text-slate-700">Penulis (Author)</label>
-                    <div class="relative">
-                        <select 
-                            id="user_id"
-                            name="user_id" 
-                            class="w-full px-4 py-3 bg-white border border-slate-250 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 rounded-xl text-sm focus:outline-none appearance-none transition-all duration-200">
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                    {{ $user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                <!-- Author Select (Superadmin Only) -->
+                @if(Auth::user()->isSuperAdmin())
+                    <div class="space-y-2">
+                        <label for="user_id" class="block text-sm font-bold text-slate-700">Penulis (Author)</label>
+                        <div class="relative">
+                            <select 
+                                id="user_id"
+                                name="user_id" 
+                                class="w-full px-4 py-3 bg-white border border-slate-250 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 rounded-xl text-sm focus:outline-none appearance-none transition-all duration-200">
+                                <option value="">-- Pilih Penulis --</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                            </div>
                         </div>
+                        @error('user_id')
+                            <p class="text-xs font-semibold text-rose-600 mt-1 flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
-                    @error('user_id')
-                        <p class="text-xs font-semibold text-rose-600 mt-1 flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </div>
+                @endif
 
                 <!-- Status Select -->
                 <div class="space-y-2">

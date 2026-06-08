@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -49,6 +50,17 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Check if user is superadmin
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'superadmin';
+    }
+
+    /**
+     * Get articles by user
+     */
     public function articles(): HasMany
     {
         return $this->hasMany(Article::class);
