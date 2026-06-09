@@ -104,18 +104,28 @@
             </a>
 
             <!-- Public Blog Link -->
-            <hr class="my-3 border-slate-200" />
-            <p class="px-4 text-[10px] font-bold tracking-wider text-slate-400 uppercase mb-3">Public</p>
-            <a href="{{ route('public.articles.index') }}" 
-               class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-200 group text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                <svg class="w-5 h-5 transition-transform duration-200 group-hover:scale-110 text-slate-400 group-hover:text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3.042.525A9.006 9.006 0 002.25 9m14.25-9h.008v.008h-.008V9m0 0A8.966 8.966 0 0112 21c4.486 0 8.268-2.977 9.75-7m.75.75v-2.008.008v2m0 0h.008v-.008h-.008v.008zM3 9.75h.008v.008H3V9.75zm14.25 0h.008v.008h-.008V9.75z" />
-                </svg>
-                <span>Lihat Blog Publik</span>
-            </a>
-        </nav>
-                <span>Articles</span>
-            </a>
+            <div class="px-4">
+                <p class="text-[10px] font-bold tracking-wider text-slate-400 uppercase mb-3">Public</p>
+                <a href="{{ route('public.articles.index') }}"
+                   class="group block rounded-3xl border border-slate-200 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 transition duration-200 group-hover:bg-indigo-100">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3.042.525A9.006 9.006 0 002.25 9m14.25-9h.008v.008h-.008V9m0 0A8.966 8.966 0 0112 21c4.486 0 8.268-2.977 9.75-7m.75.75v-2.008.008v2m0 0h.008v-.008h-.008v.008zM3 9.75h.008v.008H3V9.75zm14.25 0h.008v.008h-.008V9.75z" />
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <span class="block text-sm font-semibold text-slate-900">Lihat Blog Publik</span>
+                            <span class="block truncate text-xs text-slate-500">Akses semua artikel publik dan bacaan terbaru.</span>
+                        </div>
+                        <span class="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-500 transition duration-200 group-hover:bg-slate-200 group-hover:text-slate-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </span>
+                    </div>
+                </a>
+            </div>
         </nav>
 
         <!-- User Profile Card in Sidebar -->
@@ -170,12 +180,6 @@
             </div>
 
             <!-- Header Action Info -->
-            <div class="flex items-center gap-4">
-                <div class="px-3.5 py-1.5 rounded-full bg-indigo-50 text-xs font-semibold text-indigo-600 flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-ping"></span>
-                    Sistem Aktif
-                </div>
-            </div>
         </header>
 
         <!-- Main Body Area -->
