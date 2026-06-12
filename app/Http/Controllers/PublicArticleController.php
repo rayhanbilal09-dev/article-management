@@ -15,6 +15,7 @@ class PublicArticleController extends Controller
         $search = $request->input('search', '');
 
         $articles = Article::where('status', 'published')
+            ->where('published_at', '<=', now())
             ->with('user')
             ->when($search, function ($query) use ($search) {
                 $query->where('title', 'like', "%{$search}%")
@@ -33,7 +34,10 @@ class PublicArticleController extends Controller
     {
         $article = Article::where('slug', $slug)
             ->where('status', 'published')
-            ->with('user')
+            ->where('published_at', '<=', now())
+            ->with(['user', 'media' => function($query) {
+                $query->orderBy('order', 'asc');
+            }])
             ->firstOrFail();
 
         return view('public.articles.show', compact('article'));

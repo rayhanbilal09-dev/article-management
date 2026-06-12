@@ -96,12 +96,14 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(User $user)
-{
-    // Hapus semua artikel milik user terlebih dahulu untuk menghindari constraint foreign key
-    $user->articles()->delete();
+    {
+        // Hapus semua artikel milik user terlebih dahulu untuk menghindari constraint foreign key
+        foreach ($user->articles as $article) {
+            $article->delete();
+        }
 
-    $user->delete();
+        $user->delete();
 
-    return redirect()->route('users.index');
-}
+        return redirect()->route('users.index');
+    }
 }

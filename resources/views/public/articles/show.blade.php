@@ -145,9 +145,45 @@
         </header>
 
         <!-- Article Body -->
+        @if($article->cover_image)
+            <div class="w-full aspect-[21/9] md:aspect-[3/1] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 mb-10 shadow-sm">
+                <img src="{{ asset('storage/' . $article->cover_image) }}" class="w-full h-full object-cover" alt="{{ $article->title }}">
+            </div>
+        @endif
+
         <div class="article-content mb-16">
             {!! nl2br(e($article->content)) !!}
         </div>
+
+        <!-- Article Gallery -->
+        @if($article->media->count() > 0)
+            <div class="border-t border-slate-200 pt-10 pb-6 mb-12">
+                <h3 class="font-extrabold text-xl text-slate-900 mb-6 flex items-center gap-2">
+                    <svg class="w-5.5 h-5.5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+                    Galeri Media Pendukung
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    @foreach($article->media as $media)
+                        <div class="group bg-white border border-slate-200 rounded-2xl overflow-hidden p-3 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-900 relative">
+                                @if($media->type === 'image')
+                                    <a href="{{ asset('storage/' . $media->file_path) }}" target="_blank">
+                                        <img src="{{ asset('storage/' . $media->file_path) }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" alt="{{ $media->caption ?? 'Gallery Image' }}">
+                                    </a>
+                                @else
+                                    <video src="{{ asset('storage/' . $media->file_path) }}" class="w-full h-full object-cover" controls preload="metadata"></video>
+                                @endif
+                            </div>
+                            @if($media->caption)
+                                <p class="text-xs text-slate-500 font-semibold text-center mt-2.5 px-1 leading-relaxed">
+                                    {{ $media->caption }}
+                                </p>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
 
         <!-- Article Footer -->
         <footer class="border-t border-slate-200 pt-8 space-y-6">

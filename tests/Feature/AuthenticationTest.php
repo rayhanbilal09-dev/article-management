@@ -119,7 +119,7 @@ class AuthenticationTest extends TestCase
     public function test_deleting_user_deletes_associated_articles(): void
     {
         $user = User::factory()->create();
-        $admin = User::factory()->create();
+        $admin = User::factory()->create(['role' => 'superadmin']);
 
         // Create an article belonging to the user
         $article = \App\Models\Article::create([

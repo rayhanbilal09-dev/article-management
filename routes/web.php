@@ -31,5 +31,13 @@ Route::middleware('auth')->group(function () {
 
     // Articles Routes (both superadmin and user can access)
     Route::resource('articles', ArticleController::class);
+
+    // Media management & publishing workflow routes
+    Route::post('articles/{article}/media', [ArticleController::class, 'uploadMedia'])->name('articles.media.upload');
+    Route::post('articles/{article}/media/reorder', [ArticleController::class, 'reorderMedia'])->name('articles.media.reorder');
+    Route::post('articles/{article}/set-cover', [ArticleController::class, 'setCover'])->name('articles.set-cover');
+    Route::post('articles/{article}/toggle-publish', [ArticleController::class, 'togglePublish'])->name('articles.toggle-publish');
+    Route::delete('media/{media}', [ArticleController::class, 'destroyMedia'])->name('media.destroy');
+    Route::put('media/{media}', [ArticleController::class, 'updateMedia'])->name('media.update');
 });
 

@@ -86,11 +86,20 @@
                 @foreach($articles as $article)
                     <article class="group bg-white rounded-2xl border border-slate-200/80 overflow-hidden hover:shadow-lg hover:border-indigo-200 transition-all duration-300">
                         <!-- Article Header Card -->
-                        <div class="aspect-video bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center overflow-hidden relative group/image">
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/30 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity"></div>
-                            <svg class="w-16 h-16 text-indigo-300 group-hover/image:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18V6c0-.621.504-1.125 1.125-1.125h9.75c.621 0 1.125.504 1.125 1.125V7.5zm0 0h-3.75V4.5M10.5 7.5h.008v.008h-.008V7.5zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
-                            </svg>
+                        <!-- Article Header Card -->
+                        <div class="aspect-video overflow-hidden relative group/image bg-slate-100">
+                            @if($article->cover_image)
+                                <img src="{{ asset('storage/' . $article->cover_image) }}" class="w-full h-full object-cover group-hover/image:scale-105 transition-transform duration-500">
+                            @else
+                                <div class="w-full h-full bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-indigo-200 group-hover/image:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                    </svg>
+                                </div>
+                            @endif
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity flex items-end p-4">
+                                <span class="text-xs text-white font-medium bg-black/40 px-2.5 py-1 rounded-full backdrop-blur-sm">Lihat Detail</span>
+                            </div>
                         </div>
 
                         <!-- Content -->

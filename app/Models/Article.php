@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Article extends Model
 {
@@ -14,8 +15,14 @@ class Article extends Model
         'slug',
         'content',
         'status',
-        'published_at'
+        'published_at',
+        'cover_image'
     ];
+
+    public function media(): HasMany
+    {
+        return $this->hasMany(Media::class);
+    }
 
     protected function casts(): array
     {
@@ -30,7 +37,7 @@ class Article extends Model
     }
 
     /**
-     * Automatically generate slug if not provided
+     * Automatically generate slug if not provided and clean up files on deletion
      */
     public static function boot()
     {
@@ -45,6 +52,20 @@ class Article extends Model
         static::updating(function ($model) {
             if (empty($model->slug) || $model->isDirty('title')) {
                 $model->slug = Str::slug($model->title);
+            }
+        });
+
+        static::deleting(function ($model) {
+            // Delete cover image
+            if ($model->cover_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($model->cover_image)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($model->cover_image);
+            }
+
+            // Delete gallery media files
+            foreach ($model->media as $media) {
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($media->file_path)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($media->file_path);
+                }
             }
         });
     }
