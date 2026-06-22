@@ -28,6 +28,13 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            if (Auth::user()->is_blocked) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Akun Anda telah diblokir oleh admin.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
 
             return redirect()->intended(route('dashboard'))->with('success', 'Selamat datang kembali!');

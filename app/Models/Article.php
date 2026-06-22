@@ -24,6 +24,26 @@ class Article extends Model
         return $this->hasMany(Media::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->whereNull('parent_id');
+    }
+
+    public function allComments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function getAverageRatingAttribute(): float
+    {
+        return (float) round($this->ratings()->avg('rating') ?? 0, 1);
+    }
+
     protected function casts(): array
     {
         return [

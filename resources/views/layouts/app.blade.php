@@ -85,6 +85,26 @@
                 </span>
                 Pengguna
             </a>
+
+            <a href="{{ route('allowed-words.index') }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm transition-all duration-150 group {{ request()->routeIs('allowed-words.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                <span class="w-8 h-8 rounded-lg flex items-center justify-center {{ request()->routeIs('allowed-words.*') ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200' }} transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </span>
+                Kata Whitelist
+            </a>
+
+            <a href="{{ route('reports.index') }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm transition-all duration-150 group {{ request()->routeIs('reports.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                <span class="w-8 h-8 rounded-lg flex items-center justify-center {{ request()->routeIs('reports.*') ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200' }} transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a1 1 0 00.764-.97V4.34a1 1 0 00-1.236-.971l-2.22.522a9 9 0 01-6.108-.683l-.108-.054a9 9 0 00-6.086-.71L3 4.5M3 15V4.5" />
+                    </svg>
+                </span>
+                Laporan Komentar
+            </a>
             @endif
 
             <a href="{{ route('articles.index') }}"
@@ -153,6 +173,8 @@
                 @elseif(request()->routeIs('articles.edit')) Edit Artikel
                 @elseif(request()->routeIs('articles.show')) Detail Artikel
                 @elseif(request()->routeIs('articles.*')) Artikel
+                @elseif(request()->routeIs('allowed-words.*')) Kata Whitelist
+                @elseif(request()->routeIs('reports.*')) Laporan Komentar
                 @else Halaman
                 @endif
             </span>

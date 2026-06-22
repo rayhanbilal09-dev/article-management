@@ -35,9 +35,15 @@ class PublicArticleController extends Controller
         $article = Article::where('slug', $slug)
             ->where('status', 'published')
             ->where('published_at', '<=', now())
-            ->with(['user', 'media' => function($query) {
-                $query->orderBy('order', 'asc');
-            }])
+            ->with([
+                'user',
+                'media' => function($query) {
+                    $query->orderBy('order', 'asc');
+                },
+                'comments.user',
+                'comments.replies.user',
+                'ratings'
+            ])
             ->firstOrFail();
 
         return view('public.articles.show', compact('article'));
